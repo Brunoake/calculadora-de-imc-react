@@ -11,7 +11,35 @@ function App() {
 
   const calcImc = (e, height, weight) => {
     e.preventDefault()
-    console.log("executou")
+
+   
+    
+    if(!weight || !height) return;
+
+    const weightFloat = +weight.replace(",",".");
+    const heightFloat = +height.replace(",",".");
+
+    const imcResult = (weightFloat /(heightFloat * heightFloat)).toFixed(1)
+
+    setImc(imcResult);
+
+    data.forEach((item) => {
+      if(imcResult >= item.min && imcResult <= item.max) {
+        setInfo(item.info)
+        setInfoClass(item.infoClass)
+      }
+    });
+
+    if (!info) return;
+
+  };
+
+  const reseCalc = (e) => {
+    e.preventDefault()
+
+    setImc("");
+    setInfo("");
+    setInfoClass("");
   }
 
   const [imc, setImc] = useState("")
@@ -24,9 +52,14 @@ function App() {
      
       {!imc ? (
         <ImcCalc calcImc={calcImc}/>
-      ) : (
-        <ImcTable/>
-      )}
+        ) : (
+           <ImcTable
+            data={data} 
+             imc={imc} 
+             info={info} 
+             infoClass={infoClass}
+             resetCalc={reseCalc}/>
+             )}
     </div>
   )
 }
